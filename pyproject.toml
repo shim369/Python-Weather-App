@@ -28,3 +28,7 @@ packages = ["src/weather_app"]
 [tool.mypy]
 mypy_path = "src"
 explicit_package_bases = true
+
+[[tool.mypy.overrides]]
+module = "customtkinter"
+ignore_missing_imports = true
