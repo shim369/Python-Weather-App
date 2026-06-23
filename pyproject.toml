@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "customtkinter>=5.2.2",
+    "httpx>=0.28.1",
+    "python-dotenv>=1.2.2",
 ]
 
 [dependency-groups]
