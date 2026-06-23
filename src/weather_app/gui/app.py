@@ -1,15 +1,6 @@
 from datetime import datetime
 import customtkinter as ctk
-from weather_app.models.weather import Weather
-
-# ボタンが押された時の「ダミーデータ表示」に使う
-dummy_weather = Weather(
-    city="Tokyo",
-    description="Clear Sky",
-    temperature=25.5,
-    humidity=60,
-    fetched_at=datetime.now(),
-)
+from weather_app.services.weather_service import WeatherService
 
 # テーマの設定
 ctk.set_appearance_mode("System")
@@ -102,13 +93,14 @@ class WeatherApp(ctk.CTk):
     def _on_search_clicked(self) -> None:
         input_city = self.entry.get() if self.entry.get() else "未入力"
 
+        result = WeatherService().fetch_weather(input_city)
         # 検索結果の更新
         display_text = (
             f"検索した都市: {input_city}\n\n"
-            f"都市: {dummy_weather.city}\n"
-            f"天気: {dummy_weather.description}\n"
-            f"気温: {dummy_weather.temperature}℃\n"
-            f"湿度: {dummy_weather.humidity}%"
+            f"都市: {result.city}\n"
+            f"天気: {result.description}\n"
+            f"気温: {result.temperature}℃\n"
+            f"湿度: {result.humidity}%"
         )
         self.result_label.configure(text=display_text)
 
