@@ -1,9 +1,9 @@
+# Python Cache
+**/__pycache__/
+*.py[cod]
+
 # Virtual Environment
 .venv/
-
-# Python Cache
-__pycache__/
-*.py[cod]
 
 # Pytest
 .pytest_cache/
