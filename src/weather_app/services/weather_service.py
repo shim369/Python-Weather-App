@@ -2,6 +2,7 @@ import httpx
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from weather_app.models.weather import Weather
 
 
@@ -32,10 +33,12 @@ class WeatherService:
 
             data = response.json()
 
+            tokyo_tz = ZoneInfo("Asia/Tokyo")
+
             return Weather(
                 city=data["name"],
                 description=data["weather"][0]["description"],
                 temperature=data["main"]["temp"],
                 humidity=data["main"]["humidity"],
-                fetched_at=datetime.now(),
+                fetched_at=datetime.now(tokyo_tz),
             )
