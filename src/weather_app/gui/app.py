@@ -91,25 +91,31 @@ class WeatherApp(ctk.CTk):
         self.history_label.pack(fill="x", padx=10, pady=(5, 10))
 
     def _on_search_clicked(self) -> None:
-        input_city = self.entry.get() if self.entry.get() else "未入力"
 
-        result = WeatherService().fetch_weather(input_city)
-        # 検索結果の更新
-        display_text = (
-            f"検索した都市: {input_city}\n\n"
-            f"都市: {result.city}\n"
-            f"天気: {result.description}\n"
-            f"気温: {result.temperature}℃\n"
-            f"湿度: {result.humidity}%"
-        )
-        self.result_label.configure(text=display_text)
+        try:
+            input_city = self.entry.get() if self.entry.get() else "未入力"
 
-        # 履歴表示の更新（新規の検索履歴を上に追加していく）
-        current_time = datetime.now().strftime("%H:%M:%S")
-        new_history = f"[{current_time}] {input_city} の天気を検索しました\n"
+            result = WeatherService().fetch_weather(input_city)
+            # 検索結果の更新
+            display_text = (
+                f"検索した都市: {input_city}\n\n"
+                f"都市: {result.city}\n"
+                f"天気: {result.description}\n"
+                f"気温: {result.temperature}℃\n"
+                f"湿度: {result.humidity}%"
+            )
+            self.result_label.configure(text=display_text)
 
-        # 既存の履歴テキストを取得して、新しい履歴を先頭に結合
-        old_history = self.history_label.cget("text")
-        if old_history == "まだ履歴はありません\n":
-            old_history = ""
-        self.history_label.configure(text=new_history + old_history)
+            # 履歴表示の更新（新規の検索履歴を上に追加していく）
+            current_time = datetime.now().strftime("%H:%M:%S")
+            new_history = f"[{current_time}] {input_city} の天気を検索しました\n"
+
+            # 既存の履歴テキストを取得して、新しい履歴を先頭に結合
+            old_history = self.history_label.cget("text")
+            if old_history == "まだ履歴はありません\n":
+                old_history = ""
+            self.history_label.configure(text=new_history + old_history)
+
+        except RuntimeError as e:
+            error_text = f"エラーが発生しました\n\n{e}\n\n都市名が正しいか確認してください。"
+            self.result_label.configure(text=error_text)
