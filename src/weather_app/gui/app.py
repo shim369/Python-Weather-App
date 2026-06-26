@@ -13,7 +13,7 @@ class WeatherApp(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
         self.title("Python Weather App")
-        self.geometry("600x600")  # 縦幅を履歴表示用に少し広げました
+        self.geometry("800x800")  # 縦幅を履歴表示用に少し広げました
 
         # ----------------------------------------------------
         # 1. 画面全体のグリッド（引き伸ばし）設定
@@ -84,7 +84,7 @@ class WeatherApp(ctk.CTk):
         # 履歴のテキスト（中身）を表示するラベル（こっちは通常の太さ）
         self.history_label = ctk.CTkLabel(
             master=history_frame,
-            text="まだ履歴はありません\n",
+            text="まだ履歴はありません",
             font=ctk.CTkFont(size=13, weight="normal"),
             justify="left",
             anchor="w"
@@ -124,7 +124,7 @@ class WeatherApp(ctk.CTk):
 
             # 既存の履歴テキストを取得して、新しい履歴を先頭に結合
             old_history = self.history_label.cget("text")
-            if old_history == "まだ履歴はありません\n":
+            if old_history.strip() == "まだ履歴はありません":
                 old_history = ""
             self.history_label.configure(text=new_history + old_history)
 

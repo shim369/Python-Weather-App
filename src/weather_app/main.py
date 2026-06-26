@@ -1,7 +1,9 @@
+from weather_app.utils.logger import setup_logger
 from weather_app.gui.app import WeatherApp
 
 
 def main() -> None:
+    setup_logger()
     # GUIクラスのインスタンス化
     app = WeatherApp()
     # 画面のメインループを開始

@@ -1,5 +1,5 @@
 # Python Cache
-*/__pycache__/
+**/__pycache__/
 *.py[cod]
 
 # Virtual Environment
@@ -29,3 +29,4 @@ htmlcov/
 *.sqlite3
 
 .env
+logs/

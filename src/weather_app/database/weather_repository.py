@@ -1,7 +1,10 @@
 import sqlite3
 from datetime import datetime
 from weather_app.models.weather import Weather
+from weather_app.utils.logger import get_logger
 
+
+logger = get_logger(__name__)
 
 class WeatherRepository:
 
@@ -20,42 +23,50 @@ class WeatherRepository:
         conn.close()
 
     def save_history(self, weather: Weather) -> None:
-        dbname = self.db_path
-        conn = sqlite3.connect(dbname)
-        cur = conn.cursor()
-        sql = 'INSERT INTO weather_history (city, temperature, description, humidity, fetched_at) VALUES (?, ?, ?, ?, ?)'
-        values = (
-            weather.city,
-            weather.temperature,
-            weather.description,
-            weather.humidity,
-            str(weather.fetched_at),
-        )
-        cur.execute(sql, values)
-        conn.commit()
-        cur.close()
-        conn.close()
+        try:
+            dbname = self.db_path
+            conn = sqlite3.connect(dbname)
+            cur = conn.cursor()
+            sql = 'INSERT INTO weather_history (city, temperature, description, humidity, fetched_at) VALUES (?, ?, ?, ?, ?)'
+            values = (
+                weather.city,
+                weather.temperature,
+                weather.description,
+                weather.humidity,
+                str(weather.fetched_at),
+            )
+            cur.execute(sql, values)
+            conn.commit()
+            cur.close()
+            conn.close()
+        except sqlite3.Error as e:
+            logger.error(f"データベースエラーが発生しました: {e}")
 
     def get_all_history(self) -> list[Weather]:
-        dbname = self.db_path
-        conn = sqlite3.connect(dbname)
-        cur = conn.cursor()
-        sql = 'SELECT * FROM weather_history ORDER BY fetched_at DESC'
-        cur.execute(sql)
-        rows =cur.fetchall()
-        cur.close()
-        conn.close()
+        try:
+            dbname = self.db_path
+            conn = sqlite3.connect(dbname)
+            cur = conn.cursor()
+            sql = 'SELECT * FROM weather_history ORDER BY fetched_at DESC'
+            cur.execute(sql)
+            rows =cur.fetchall()
+            cur.close()
+            conn.close()
 
-        histories = []
-        for row in rows:
-            # row[0]はid、row[1]はcity、row[2]はtemperature...
-            weather_data = Weather(
-                city=row[1],
-                temperature=row[2],
-                description=row[3],
-                humidity=row[4],
-                fetched_at=datetime.fromisoformat(row[5]) # 文字列からdatetimeに戻すおまじない
-            )
-            histories.append(weather_data)
+            histories = []
+            for row in rows:
+                # row[0]はid、row[1]はcity、row[2]はtemperature...
+                weather_data = Weather(
+                    city=row[1],
+                    temperature=row[2],
+                    description=row[3],
+                    humidity=row[4],
+                    fetched_at=datetime.fromisoformat(row[5]) # 文字列からdatetimeに戻すおまじない
+                )
+                histories.append(weather_data)
 
-        return histories
+            return histories
+
+        except sqlite3.Error as e:
+            logger.error(f"データベースエラーが発生しました: {e}")
+            return []
