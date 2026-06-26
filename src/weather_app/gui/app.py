@@ -1,6 +1,7 @@
 from datetime import datetime
 import customtkinter as ctk
 from weather_app.services.weather_service import WeatherService
+from weather_app.database.weather_repository import WeatherRepository
 
 # テーマの設定
 ctk.set_appearance_mode("System")
@@ -68,11 +69,11 @@ class WeatherApp(ctk.CTk):
         # ----------------------------------------------------
         # 4. 一番下のフィールド（履歴表示エリア）
         # ----------------------------------------------------
-        # 💡 label_text="検索履歴" を削除して、ただのスクロールフレームにする
+        # label_text="検索履歴" を削除して、ただのスクロールフレームにする
         history_frame = ctk.CTkScrollableFrame(master=self, corner_radius=10)
         history_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=(5, 10), sticky="nsew")
 
-        # 👑 タイトル専用のラベルを「太字（bold）」で作成して一番上に追加
+        # タイトル専用のラベルを「太字（bold）」で作成して一番上に追加
         history_title = ctk.CTkLabel(
             master=history_frame,
             text="検索履歴",
@@ -80,7 +81,7 @@ class WeatherApp(ctk.CTk):
         )
         history_title.pack(fill="x", padx=10, pady=(5, 10))
 
-        # 📄 履歴のテキスト（中身）を表示するラベル（こっちは通常の太さ）
+        # 履歴のテキスト（中身）を表示するラベル（こっちは通常の太さ）
         self.history_label = ctk.CTkLabel(
             master=history_frame,
             text="まだ履歴はありません\n",
@@ -90,12 +91,23 @@ class WeatherApp(ctk.CTk):
         )
         self.history_label.pack(fill="x", padx=10, pady=(5, 10))
 
+        histories = WeatherRepository().get_all_history()
+        history_text = ""
+
+        if not histories:
+            self.history_label.configure(text="まだ履歴はありません")
+        else:
+            for w in histories:
+                history_text += f"[{w.fetched_at.strftime('%H:%M:%S')}] {w.city}: {w.temperature}℃\n"
+            self.history_label.configure(text=history_text)
+
     def _on_search_clicked(self) -> None:
 
         try:
             input_city = self.entry.get() if self.entry.get() else "未入力"
 
             result = WeatherService().fetch_weather(input_city)
+            WeatherRepository().save_history(result)
             # 検索結果の更新
             display_text = (
                 f"検索した都市: {input_city}\n\n"
