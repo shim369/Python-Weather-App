@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 from weather_app.models.weather import Weather
 from weather_app.utils.logger import get_logger
+from weather_app.utils.decorators import time_logger, action_logger
 
 
 logger = get_logger(__name__)
@@ -51,6 +52,8 @@ class WeatherRepository:
         except sqlite3.Error as e:
             logger.error("データベースエラーが発生しました: %s", e)
 
+    @action_logger
+    @time_logger
     def get_all_history(self) -> list[Weather]:
         try:
             conn = self._get_connection()
