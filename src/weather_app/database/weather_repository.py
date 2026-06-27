@@ -37,10 +37,11 @@ class WeatherRepository:
             )
             cur.execute(sql, values)
             conn.commit()
+            logger.info("検索履歴を保存しました: %s", weather.city)
             cur.close()
             conn.close()
         except sqlite3.Error as e:
-            logger.error(f"データベースエラーが発生しました: {e}")
+            logger.error("データベースエラーが発生しました: %s", e)
 
     def get_all_history(self) -> list[Weather]:
         try:
@@ -68,5 +69,5 @@ class WeatherRepository:
             return histories
 
         except sqlite3.Error as e:
-            logger.error(f"データベースエラーが発生しました: {e}")
+            logger.error("データベースエラーが発生しました: %s", e)
             return []

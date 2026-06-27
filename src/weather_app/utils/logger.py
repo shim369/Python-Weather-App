@@ -13,7 +13,7 @@ def setup_logger() -> None:
 
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
+        format='%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S',
         handlers=[
             logging.FileHandler(log_file, 'a', 'utf-8'),
@@ -21,7 +21,7 @@ def setup_logger() -> None:
         ]
     )
 
-    logging.info("Logger has been initialized.")
+    logging.info("ロガーを初期化しました.")
 
 
 def get_logger(name: str) -> logging.Logger:

@@ -35,6 +35,8 @@ class WeatherService:
 
                 tokyo_tz = ZoneInfo("Asia/Tokyo")
 
+                logger.info("天気情報を取得しました: %s", city)
+
                 return Weather(
                     city=data["name"],
                     description=data["weather"][0]["description"],
@@ -45,10 +47,10 @@ class WeatherService:
 
         except httpx.HTTPStatusError as e:
             # ユーザーの入力ミス（404など）や一時的なAPIエラーは警告ログにする
-            logger.warning(f"APIステータスエラーが発生しました: {e}")
+            logger.warning("APIステータスエラーが発生しました: %s", e)
             raise RuntimeError(f"都市が見つからないか、APIエラーが発生しました。({e.response.status_code})") from e
 
         except httpx.RequestError as e:
             # ネットワークが切れているなどの致命的な通信失敗はエラーログにする
-            logger.error(f"ネットワーク通信に失敗しました: {e}")
+            logger.error("ネットワーク通信に失敗しました: %s", e)
             raise RuntimeError("天気情報の取得に失敗しました。ネット接続を確認してください。") from e
