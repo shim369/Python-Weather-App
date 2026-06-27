@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 class WeatherService:
 
-    def fetch_weather(self, city: str, current_time: datetime = None) -> Weather:
+    def fetch_weather(self, city: str, current_time: datetime | None = None) -> Weather:
         try:
             url = "https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_key}"
             API_KEY = os.getenv("OPENWEATHER_API_KEY")
