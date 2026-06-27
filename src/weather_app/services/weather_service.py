@@ -13,37 +13,37 @@ logger = get_logger(__name__)
 
 class WeatherService:
 
-    def fetch_weather(self, city: str) -> Weather:
+    def fetch_weather(self, city: str, current_time: datetime = None) -> Weather:
         try:
-            with httpx.Client() as client:
-                url = "https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_key}"
-                API_KEY = os.getenv("OPENWEATHER_API_KEY")
+            url = "https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={API_key}"
+            API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
-                if not API_KEY:
-                    raise RuntimeError(
-                        "APIキーが設定されていません。` .env ` ファイルを確認してください。"
-                    )
-
-                url = url.format(
-                    city_name=city, API_key=API_KEY
+            if not API_KEY:
+                raise RuntimeError(
+                    "APIキーが設定されていません。` .env ` ファイルを確認してください。"
                 )
-                response = client.get(url)
 
-                response.raise_for_status()
+            url = url.format(
+                city_name=city, API_key=API_KEY
+            )
+            response = httpx.get(url)
 
-                data = response.json()
+            response.raise_for_status()
 
-                tokyo_tz = ZoneInfo("Asia/Tokyo")
+            data = response.json()
 
-                logger.info("天気情報を取得しました: %s", city)
+            if current_time is None:
+                current_time = datetime.now(ZoneInfo("Asia/Tokyo"))
 
-                return Weather(
-                    city=data["name"],
-                    description=data["weather"][0]["description"],
-                    temperature=data["main"]["temp"],
-                    humidity=data["main"]["humidity"],
-                    fetched_at=datetime.now(tokyo_tz),
-                )
+            logger.info("天気情報を取得しました: %s", city)
+
+            return Weather(
+                city=data["name"],
+                description=data["weather"][0]["description"],
+                temperature=data["main"]["temp"],
+                humidity=data["main"]["humidity"],
+                fetched_at=current_time,
+            )
 
         except httpx.HTTPStatusError as e:
             # ユーザーの入力ミス（404など）や一時的なAPIエラーは警告ログにする

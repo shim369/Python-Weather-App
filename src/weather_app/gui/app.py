@@ -1,5 +1,6 @@
 from datetime import datetime
 import customtkinter as ctk
+from weather_app.models.weather import Weather
 from weather_app.services.weather_service import WeatherService
 from weather_app.database.weather_repository import WeatherRepository
 
@@ -108,12 +109,13 @@ class WeatherApp(ctk.CTk):
 
             result = WeatherService().fetch_weather(input_city)
             WeatherRepository().save_history(result)
+            fahrenheit_val = Weather.celsius_to_fahrenheit(result.temperature)
             # 検索結果の更新
             display_text = (
                 f"検索した都市: {input_city}\n\n"
                 f"都市: {result.city}\n"
                 f"天気: {result.description}\n"
-                f"気温: {result.temperature}℃\n"
+                f"気温: {result.temperature}℃ ({fahrenheit_val:.1f}℉)\n"
                 f"湿度: {result.humidity}%"
             )
             self.result_label.configure(text=display_text)
