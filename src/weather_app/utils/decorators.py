@@ -23,7 +23,7 @@ def time_logger(func: Callable[..., Any]) -> Callable[..., Any]:
 
 def action_logger(func: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
         # 前処理：関数が呼ばれたことをログに書く
         logger.info(f"★ [{func.__name__}] の処理を開始します")
 
