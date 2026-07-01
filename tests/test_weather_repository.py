@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from weather_app.models.weather import Weather
 from weather_app.database.weather_repository import WeatherRepository
 
-@pytest.fixturedef
+@pytest.fixture
 def db_repo() -> Generator[WeatherRepository, None, None]:
     # 1. 接続を1つだけ作る（これでメモリ上に1つの宇宙が固定される）
     conn = sqlite3.connect(":memory:")
