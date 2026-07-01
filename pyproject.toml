@@ -28,8 +28,10 @@ weather-app = "weather_app.main:main"
 packages = ["src/weather_app"]
 
 [tool.mypy]
+python_version = "3.12"
+strict = true
 mypy_path = "src"
-explicit_package_bases = true
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "customtkinter"

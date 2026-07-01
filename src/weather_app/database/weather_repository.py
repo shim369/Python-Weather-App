@@ -1,4 +1,5 @@
 import sqlite3
+from typing import Optional
 from datetime import datetime
 from weather_app.models.weather import Weather
 from weather_app.utils.logger import get_logger
@@ -9,12 +10,12 @@ logger = get_logger(__name__)
 
 class WeatherRepository:
 
-    def __init__(self, db_name: str = "weather.db", conn = None) -> None:
+    def __init__(self, db_name: str = "weather.db", conn: Optional[sqlite3.Connection] = None) -> None:
         self.db_name = db_name
         # もし外から conn（接続）が渡されてきたらそれを使い、なければ None
         self._shared_conn = conn
 
-    def _get_connection(self):
+    def _get_connection(self) -> sqlite3.Connection:
         # 共有された接続があればそれを返し、なければ毎回新しく開く
         if self._shared_conn:
             return self._shared_conn

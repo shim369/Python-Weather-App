@@ -8,7 +8,7 @@ ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
 
-class WeatherApp(ctk.CTk):
+class WeatherApp(ctk.CTk): # type: ignore[misc]
 
     def __init__(
         self,
