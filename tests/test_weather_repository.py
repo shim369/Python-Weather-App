@@ -1,5 +1,6 @@
 import pytest
 import sqlite3
+from collections.abc import Generator
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from weather_app.models.weather import Weather
@@ -19,7 +20,7 @@ def db_repo():
     # 3. テストが終わったら接続を閉じる（ここで宇宙が消滅する）
     conn.close()
 
-def test_save_and_get_history(db_repo):
+def test_save_and_get_history(db_repo: WeatherRepository) -> None:
     # この中では db_repo が自由に使える！
 
     tokyo_tz = ZoneInfo("Asia/Tokyo")

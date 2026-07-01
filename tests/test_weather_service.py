@@ -1,8 +1,9 @@
+from typing import Any
 from unittest.mock import patch
 from weather_app.services.weather_service import WeatherService
 
 @patch("weather_app.services.weather_service.httpx.get")
-def test_fetch_weather_success(mock_get):
+def test_fetch_weather_success(mock_get: Any) -> None:
     mock_get.return_value.json.return_value = {
         "name": "Tokyo",
         "weather": [{"description": "clear sky"}],
